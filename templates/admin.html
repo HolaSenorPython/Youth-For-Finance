@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--BOOTSTRAP CSS-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" 
+    rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <!--MY CUSTOM CSS!-->
+    <link rel="stylesheet" href="static/css/custom.css">
+    <title>Admin Page!🥸</title>
+</head>
+<body class="yff-body">
+    <!--HERO UP HERE-->
+    <div class="px-4 py-5 text-center bg-deep-blue"> 
+        <img src="static/assets/img/yff-logo.jpg" class="rounded-3 mb-2" width="200" height="200">
+        <h1 class="display-5 fw-bold text-white">Admin Page!</h1> 
+        <div class="col-lg-6 mx-auto"> 
+            <p class="lead mb-4 text-white">Hi, {{ user.name }}! If you are here, that means you are an admin,
+                AKA an officer in real life or someone of high status in this club. <b><u>NOTE: With great power comes
+                    great responsibility, so keep that in mind before doing anything on this page. See Elisha for any technical
+                    difficulties or questions about how to use your powers.
+                </u></b>
+            </p>
+            <a href="{{ url_for('home') }}" class="btn btn-lg btn-orange">Return Home!🛖</a>
+            <a href="{{ url_for('user_home') }}" class="btn btn-lg btn-byzantium">Return to {{ user.name }}'s Home!🗿</a>
+            <a href="{{ url_for('del_service') }}" class="btn btn-lg btn-red">Delete a Task!🚮</a>
+        </div>
+    </div>
+    <!--TABLES WITH THE DATABASE INFO AND STUFF-->
+    <!--THIS IS THE MAIN CONTAINER, WITH THE TWO LIME GREEN DIVS I WILL HAVE IN HERE-->
+    <div class="container my-5">
+        <!--The OUTSIDE ROW with both divs, horizontal space is there-->
+        <div class="row gx-5">
+            <!--Should take up half and half (the two seperate divs)-->
+            <div class="col-sm-6">
+                <div class="container bg-lime-green rounded-3 text-center">
+                    <h3 class="fw-bold text-decoration-underline" style="color: purple;">User Database🫂</h3>
+                    <!--THIS IS THE ROW AND COL INSIDE THE little lime green container on LEFT-->
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <!--THIS IS THE ROW FOR OUR TABLE HEAD/COLUMN TITLES.-->
+                                    <tr>
+                                        <th scope="col">
+                                            User ID:
+                                        </th>
+                                        <th scope="col">
+                                            Email:
+                                        </th>
+                                        <th scope="col">
+                                            Name:
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <!--THIS IS TABLE BODY.-->
+                                <tbody>
+                                    <!--GET EVERY USER AND SHOW THEM!-->
+                                    {% for user in all_users %}
+                                    <tr> <!--MAKE NEW ROW IN TABLE-->
+                                        <th scope="row"> <!--THIS ROW HEADER IS THE ID OF THE USER IN QUESTION-->
+                                            {{ user.id }}
+                                        </th>
+                                        <td> <!--REGULAR OL' DATA CELL-->
+                                            {{ user.email }}
+                                        </td>
+                                        <td>
+                                            {{ user.name }}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-sm-4">
+                            <img src="static/assets/img/user-img.png" class="rounded-3" width="150" height="150">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="container bg-lime-green rounded-3 text-center">
+                    <!--THIS IS THE ROW AND COL INSIDE THE little lime green container on RIGHT-->
+                    <div class="row">
+                        <h3 class="fw-bold text-decoration-underline" style="color: purple;">Task Database📃</h3>
+                        <div class="col-sm-3">
+                            <img src="static/assets/img/task-img.png" class="rounded-3" width="150" height="150">
+                        </div>
+                        <div class="col-sm-9">
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <!--ROW FOR TABLE HEAD OF TASK TABLE-->
+                                    <tr>
+                                        <th scope="col">
+                                            Task ID:
+                                        </th>
+                                        <th scope="col">
+                                            Taskdoer Name:
+                                        </th>
+                                        <th scope="col">
+                                            Task Desc.
+                                        </th>
+                                        <th scope="col">
+                                            Time Taken:
+                                        </th>
+                                        <th scope="col">
+                                            Date:
+                                        </th>
+                                        <th scope="col">
+                                            Proof Image:
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <!--BODY-->
+                                <tbody>
+                                    <!--GET EVERY TASK!-->
+                                    {% for task in all_tasks %}
+                                    <tr> <!--TABLE ROW-->
+                                        <th scope="row">{{ task.id }}</th> <!--ROW HEADING IS THE TASK'S ID-->
+                                        <td>{{ task.taskdoer.name }}</td> <!--DATA CELL-->
+                                        <td>{{ task.task_description }}</td>
+                                        <td>{{ task.time_taken }}</td>
+                                        <td>{{ task.date_completed }}</td>
+                                        <!--THIS WILL BE AN ANCHOR TAG, THAT OPENS THE IMAGE IN A NEW TAB!-->
+                                        <td><a href="{{ url_for('static', filename='assets/img/uploads/' ~ task.proof_image) }}" class="btn btn-sm btn-primary" target="_blank">
+                                            Proof Image!
+                                        </a></td> 
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!--HIDDEN LOOPING AUDIO STUFF-->
+<audio src="static/assets/audio/90210.mp3" id="travisAudio"></audio>
+<script>
+    const travisAudio = document.getElementById('travisAudio');
+
+    travisAudio.volume = 0.5;
+    travisAudio.loop = true;
+    travisAudio.play();
+</script>
+</body>
+</html>

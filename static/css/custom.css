@@ -1,0 +1,101 @@
+/* 
+ THIS FILE WILL CONTAIN ALL MY CUSTOM CSS!
+*/
+
+/* 
+  THIS WILL BE THE THEME STUFF FOR OUR PAGE!
+*/
+
+.yff-body {
+    background-color: green;
+}
+
+.bg-deep-blue { /* THIS IS A DEEP BLUE CUSTOM BG FOR STUFF*/
+    background-color: #006994;
+}
+
+.bg-purple { /* PURPLE PACKGROUND FOR STUFF */
+    background-color: purple;
+}
+
+.bg-lime-green { /* LIME GREEN BG */
+    background-color: lime;
+}
+
+.bg-maroon { /* RED */
+    background-color: maroon;
+}
+/*
+ CUSTOM BUTTONS
+*/
+.btn-white {
+    border: none;
+    background-color: white;
+    color: black;
+}
+
+.btn-white:hover,
+.btn-white:focus {
+    background-color: lightgray;
+    color: black;
+}
+
+.btn-green {
+    border: none;
+    background-color: limegreen;
+    color: white;
+}
+
+.btn-green:hover,
+.btn-green:focus {
+    background-color: green;
+    color: white;
+}
+
+.btn-purple {
+    border: none;
+    background-color: darkorchid;
+    color: white;
+}
+
+.btn-purple:hover,
+.btn-purple:focus {
+    background-color: purple;
+    color: white;
+}
+
+.btn-orange {
+    background-color: orangered;
+    color: white;
+    border: none;
+}
+
+.btn-orange:hover,
+.btn-orange:focus {
+    background-color: #FF966B;
+    color: white;
+}
+
+.btn-byzantium {
+    background-color: #702963;
+    color: white;
+    border: none;
+}
+
+.btn-byzantium:hover,
+.btn-byzantium:focus {
+    background-color: #BA45A5;
+    color: white;
+}
+
+.btn-red {
+    background-color: red;
+    color: white;
+    border: none;
+}
+
+.btn-red:hover,
+.btn-red:focus {
+    background-color: lightcoral;
+    color: white;
+}

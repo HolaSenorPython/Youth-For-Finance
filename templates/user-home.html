@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--BOOTSTRAP CSS-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" 
+    rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <!--MY CUSTOM CSS!-->
+    <link rel="stylesheet" href="static/css/custom.css">
+    <title>{{ user.name }}'s Home.</title>
+</head>
+<body class="yff-body">
+    <div class="bg-deep-blue text-white rounded-3 justify-content-center text-center my-5 py-3 mx-5">
+        <h1 class="fw-bold">Welcome, {{ user.name }}!</h1>
+        <h2 class="fw-bold"><u>You currently have: {{ total_hours }} community service hours.</u></h2>
+        <!--If they dont have more than 0 hours, then tell them to use the buttons below to get started!-->
+        {% if not total_hours > 0 %}
+            <h4 class="fw-bold" style="color: yellow;">You currently have nothing logged for community service.</h4>
+            <h4 class="fw-bold">Use the buttons below to get started!</h4>
+        <!--Otherwise show em a table! (WILL BE A SEPERATE DIV BELOW)-->
+        {% else %}
+        <h4 style="color: lime;">You have community service activities logged! Nice!😀 See them in the table below.</h4>
+        {% endif %}
+        <!--OUTSIDE OF THE IF STATEMENT FOR HOURS, THIS ONE IS DEPENDENT ON IF THEY ARE ADMIN. PLACES AN H4 BEFORE THE PASSWORD AND BTNS IN OUR STUFF ABOVE.-->
+        {% if is_admin %}
+        <h4 style="color: orange" class="text-decoration-underline">Your account ID is {{ user.id }}. You are an admin! Access admin page here: 
+          <a href="{{ url_for('admin_page') }}" class="btn btn-md btn-secondary ">Admin Page!🥸</a></h4>
+        {% else %}
+        <h4 style="color: yellowgreen;" class="text-decoration-underline">Your account ID is {{ user.id }}. You are NOT an admin user.</h4>
+        {% endif %}
+        <!--This will help users always remember their password.-->
+        <div class="container w-25 my-3">
+            <div class="row">
+                <div class="col-sm-8">
+                    <h4 class="fw-bold">Your password:</h4>
+                    <h5 id="usersPassword">{{ unhashed_password }}</h5>
+                </div>
+                <div class="col-sm-4">
+                   <button class="btn btn-md btn-primary" id="passwordHandlerBtn">Show Password😀</button> 
+                </div>
+            </div>
+        </div>
+        <a href="{{ url_for('add_service') }}" class="btn btn-lg btn-success">Log Hours!🪵</a>
+        <a href="{{ url_for('del_service') }}"class="btn btn-lg btn-danger">Delete an Activity!🚫</a>
+        <a href="{{ url_for('home') }}" class="btn btn-lg btn-orange">Return Home!🛖</a>
+    </div>
+    <!--MESSAGE FLASHING SECTION-->
+    <div class="container my-3 d-flex justify-content-center">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category | default('info') }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn text-danger fw-bold border-0 bg-transparent fs-6 fst-italic" data-bs-dismiss="alert">
+                  ❌ Close
+                </button>
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+    </div>
+    <!--THIS TABLE WILL ONLY SHOW IF USER HAS MORE THAN 0 COMMUNITY SERVICE HOURS.-->
+    {% if total_hours > 0 %}
+    <div class="container my-2 bg-purple rounded-4">
+      <div class="row py-5 px-2">
+        <div class="col-sm-8">
+            <table class="table table-striped table-hover">
+                <thead> <!--Table head. This is where titles of columns go in the table. We want this to come from our db.-->
+                  <tr> <!--Table row (in the head)-->
+                    {% for title in titles %} <!--GET EVERY TITLE IN THAT LIST, AND PUT IT IN A COLUMN HEADING-->
+                      {% if title == "Time Taken" %} <!--TIME TAKEN attribute should look like this after cleaning, soooo do the below-->
+                        <th scope="col">
+                          {{ title }} (Hours)
+                        </th>
+                      {% elif loop.index == 2 %} <!--COUNTING FROM 1, IF WE ARE ON THE SECOND ITEM/TITLE IN LOOP, ADD OUR NAME HEADING AFTER!-->
+                      <th scope="col"> <!--AFTER OUR TITLE HEADING...-->
+                        {{ title }}
+                      </th>
+                      <th scope="col"> <!--ADD THIS HEADING FOR TASKDOER NAME HERE-->
+                          Taskdoer (Name)
+                      </th>
+                      {% elif title == "Id" %} <!--EVERY TASK HAS AN ID. IF THE NAME OF THE COLUMN CURRENTLY ON IN THE LOOP IS "ID"...-->
+                      <th scope="col"> <!--BE MORE SPECIFIC, CHANGE NAME TO "TASK ID" SO USER CAN EASILY DELETE TASK LATER-->
+                        Task Id
+                      </th>
+                      {% else %} <!--ALL OTHER COLUMNS CAN REMAIN.-->
+                        <th scope="col">
+                            {{ title }}
+                        </th>
+                      {% endif %}
+                    {% endfor %}
+                  </tr>
+                </thead>
+                <tbody> <!--TIME FOR TABLE BODY!-->
+                    <!--GET THE CURRENT USER'S TASKS AND SHOW EM!-->
+                    {% for task in tasks %}
+                    <tr> <!--Make new row in table-->
+                        <th scope="row">{{ task.id }}</th> <!--Set row name as the TASK ID-->
+                        <td>{{ task.taskdoer_id }}</td> <!--THIS IS NUMBER 2 IN LOOP INDEX.-->
+                        <td>{{ task.taskdoer.name }}</td> <!--THIS IS ALSO NUMBER 2 IN LOOP INDEX. I NEED THEM BOTH PLACED AT SAME TIME, THIS IS THE 3RD DATACELL BUT 2ND INDEX IN LOOP-->
+                        <td>{{ task.task_description }}</td>
+                        <td>{{ task.time_taken }}</td>
+                        <td>{{ task.date_completed }}</td>
+                        <td>{{ task.proof_image }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-sm-4">
+          <img src="static/assets/img/jerry-pointing-left.jpg" class="rounded-3" width="400" height="400">
+        </div>
+      </div>
+    </div>
+    {% else %}
+    <div class="justify-content-center align-items-center text-center bg-purple rounded-5 mx-5">
+      <p class="fw-bold text-white fs-4 pt-2">Normally a table would be here if you had community service hours.<br>Unfortunately you don't. Sucks to be you.</p>
+      <img src="static/assets/img/mbappe-cry.gif" class="rounded-5 pb-3">
+    </div>
+    {% endif %}
+<!--HIDDEN SOUND ALBANIA-->
+<audio src="static/assets/audio/albanian.mp3" id="albanianSound"></audio>
+<!--BOOTSTRAP JS! (NEED THIS FOR MSG FLASHING)-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" 
+integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" 
+crossorigin="anonymous"></script>
+<!--MY CUSTOM JS FOR PASSWORD SHOW AND HIDE!-->
+<script src="static/js/user-home.js"></script>
+</body>
+</html>
