@@ -71,7 +71,7 @@ Many student clubs still track service hours with archaic paper forms that are e
    `
 5. **Create the database (one-time thing)**
   - Run the below from root directory:
-  - `python create_tables.py`
+  - `python create_db.py`
 6. **Run the Main.py**
   - `python main.py`
 7. **Enjoy!**
