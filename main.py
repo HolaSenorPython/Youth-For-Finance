@@ -80,7 +80,7 @@ login_manager.init_app(app=app)
 class Base(DeclarativeBase):
     pass
 # Had to use absolute path cause it was tripping
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///C:/Users/super/OneDrive/Desktop/My Personal Projects/Youth For Finance/site.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'sqlite:///site.db')
 db = SQLAlchemy(model_class=Base)
 db.init_app(app=app)
 
@@ -130,13 +130,6 @@ def admin_only(function):
         else:
             return abort(403)
     return admin_check # return the admin check function's result, not the function passed in by itself or anything else
-
-
-
-# Actually create db
-with app.app_context():
-    print("Making db...")
-    db.create_all()
 
 @app.route('/')
 def home(): # The home page will vary based on who's logged in so yeah pass those bad boys in.
@@ -346,4 +339,4 @@ def nuke():
     return render_template('nuke.html', form=form)
 # Instructions to run app (only here)
 if __name__ == "__main__":
-    app.run() # Debug mode on
+    app.run(debug=False) # Debug mode on
