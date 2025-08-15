@@ -34,13 +34,16 @@ def send_email(name, email, message):
     gio_email = os.environ.get('GIO_EMAIL')
     chris_b_email = os.environ.get('CHRIS_B_EMAIL')
     gabby_email = os.environ.get('GABBY_EMAIL')
+    tony_email = os.environ.get('TONY_EMAIL')
+    ken_email = os.environ.get('KEN_EMAIL')
     my_personal_email = os.environ.get('MY_PERSONAL_EMAIL')
+    brenda_email = os.environ.get('BRENDA_EMAIL')
 
     # Make email msg object
     msg = EmailMessage()
     msg['Subject'] = f"You've received a contact form message from: {users_name}!"
     msg['From'] = my_email # Has to be MY email so google doesn't trip and assume im a bot
-    msg['To'] = [my_personal_email, gio_email, ajay_email, chris_b_email, gabby_email]
+    msg['To'] = [my_personal_email, gio_email, ajay_email, chris_b_email, gabby_email, tony_email, ken_email, brenda_email]
     msg['Reply-To'] = users_email # ANY officer reply goes to their (the contact form filler outer) email
 
     # Actually make message body / content
@@ -118,7 +121,7 @@ def load_user(user_id): # Will take a user id as an input
     return db.session.get(User, user_id)
 
 # Defined admin ids globally to work with it in other functions
-admin_ids = [1, 2, 3, 4, 5, 6, 7] # IDS of the admin users (first 7 people)
+admin_ids = [1, 2, 3, 4, 5, 6, 7, 8, 9] # IDS of the admin users (first 9 people)
 
 # THIS IS MY CUSTOM ADMIN DECORATOR. OFFICERS WILL GET ACCESS TO A SECRET PAGE!
 def admin_only(function):
@@ -363,10 +366,6 @@ def nuke():
         
     return render_template('nuke.html', form=form)
 
-# Create db locally
-with app.app_context():
-    db.create_all()
-
 # Instructions to run app (only here)
 if __name__ == "__main__":
-    app.run(debug=True) # Debug mode on
+    app.run(debug=False) # Debug mode on
