@@ -20,7 +20,7 @@ Many student clubs still track service hours with archaic paper forms that are e
 ## ✨ Features
 
 - **User authentication:** Register, login, logout — with secure password hashing 🔑  
-- **Role-based access:** First 7 registered users are granted admin privileges automatically (manage users, nuke database, view all tasks). Everyone else is a normal user.  
+- **Role-based access:** First 9 registered users are granted admin privileges automatically (manage users, nuke database, view all tasks). Everyone else is a normal user.  
 - **Service logging:** Students log tasks with description, hours, date, and upload photo proof 📸  
 - **Task management:** Users can add and delete their own tasks; admins can view and manage all tasks and users  
 - **Email contact form:** Students and visitors can send messages to club officers via a contact form with multi-recipient emails ✉️  
