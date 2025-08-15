@@ -2,7 +2,7 @@
 from datetime import date # Date for community service logging
 from flask import Flask, redirect, url_for, flash, render_template, request, abort, session
 from flask_bootstrap import Bootstrap5
-from forms import ContactForm, RegisterUserForm, LoginForm, AddTaskForm, DeleteTaskForm, NukeForm # Import all our forms necessary
+from forms import ContactForm, RegisterUserForm, LoginForm, AddTaskForm, DeleteTaskForm, NukeForm, DeleteUserForm # Import all our forms necessary
 from flask_login import UserMixin, login_user, LoginManager, current_user, logout_user, login_required # Imports for USER handling stuff
 from functools import wraps # for officer only stuff later
 # Whole lotta database stuff.
@@ -68,6 +68,7 @@ Message: {users_msg}
 app = Flask(__name__) # App is located at the name of whatever this file is called (main)
 app.config["SECRET_KEY"] = os.environ.get("FLASK_KEY") # Set flask key
 app.config['UPLOAD_FOLDER'] = 'static/assets/img/uploads' # THIS IS WHERE ALL USER UPLOADS FOR COMMUNITY SERVICE GO
+os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 Bootstrap5(app=app) # Setup bootstrap5
 
 # Configure Flask login manager (THIS LETS ME DISALLOW PEOPLE FROM ACCESSING PAGES WHEN NOT LOGGED IN!)
@@ -94,7 +95,7 @@ class User(db.Model, UserMixin): # Inherit from UserMixin in Flask, lets me chec
     name: Mapped[str] = mapped_column(String(50), nullable=False) # no MORE than 50 chars, non nullable
 
     # THIS IS THE LINK TO THE TASKS TABLE!!! EVERY USER HAS TASKS ASSOCIATED WITH THEM.
-    tasks = relationship("Task", back_populates="taskdoer") # This is also a list that can be iterated through.
+    tasks = relationship("Task", back_populates="taskdoer", cascade="all, delete-orphan") # This is also a list that can be iterated through.
 
 class Task(db.Model):
     __tablename__ = "Tasks"
@@ -308,6 +309,30 @@ def del_service():
     
     return render_template('delete-task.html', form=form, user=current_user)
 
+# Route for deleting a user
+@app.route('/delete-user', methods=['GET', 'POST'])
+@login_required
+@admin_only
+def del_user():
+    form = DeleteUserForm()
+    if form.validate_on_submit(): # If a POST request is made...
+        requested_user_id = form.desired_user_id.data
+        requested_user = db.get_or_404(User, requested_user_id)
+        requested_users_name = requested_user.name
+        # If the admin tries deleting themself, don't let em
+        if current_user.id == requested_user_id:
+            flash(f"You cannot delete yourself, {current_user.name}!", 'danger')
+            return redirect(url_for('admin_page', user=current_user, logged_in=current_user.is_authenticated))
+
+        # Actually delete.
+        db.session.delete(requested_user)
+        db.session.commit()
+        # Flash n redirect
+        flash(f"Successfully deleted user {requested_users_name}.", 'success')
+        return redirect(url_for('admin_page', user=current_user, logged_in=current_user.is_authenticated))
+    
+    return render_template('delete-user.html', form=form, user=current_user)
+
 # Final route. Route for ADMIN users (officers)
 @app.route('/admin-page')
 # DECORATORS ARE BOTTOM UP, BUT IN ADMIN ONLY, DEPENDING ON WHAT HAPPENS WE MAKE A HIT TO THIS ROUTE, MEANING WE WILL NEED TO CHECK IF THEY ARE LOGGED IN AFTER THE HIT
@@ -337,6 +362,11 @@ def nuke():
             return redirect(url_for('user_home'))
         
     return render_template('nuke.html', form=form)
+
+# Create db locally
+with app.app_context():
+    db.create_all()
+
 # Instructions to run app (only here)
 if __name__ == "__main__":
-    app.run(debug=False) # Debug mode on
+    app.run(debug=True) # Debug mode on

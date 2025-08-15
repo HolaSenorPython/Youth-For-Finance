@@ -25,7 +25,23 @@
             <a href="{{ url_for('home') }}" class="btn btn-lg btn-orange">Return Home!🛖</a>
             <a href="{{ url_for('user_home') }}" class="btn btn-lg btn-byzantium">Return to {{ user.name }}'s Home!🗿</a>
             <a href="{{ url_for('del_service') }}" class="btn btn-lg btn-red">Delete a Task!🚮</a>
+            <a href="{{ url_for('del_user') }}" class="btn btn-lg btn-maroon">Delete User!😱🗑️</a>
         </div>
+    </div>
+    <!--MESSAGE FLASHING SECTION-->
+    <div class="container my-3 d-flex justify-content-center">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category | default('info') }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn text-danger fw-bold border-0 bg-transparent fs-6 fst-italic" data-bs-dismiss="alert">
+                  ❌ Close
+                </button>
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
     </div>
     <!--TABLES WITH THE DATABASE INFO AND STUFF-->
     <!--THIS IS THE MAIN CONTAINER, WITH THE TWO LIME GREEN DIVS I WILL HAVE IN HERE-->
@@ -145,5 +161,9 @@
     travisAudio.loop = true;
     travisAudio.play();
 </script>
+<!--BOOTSTRAP JS! (NEED THIS FOR MSG FLASHING)-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" 
+integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" 
+crossorigin="anonymous"></script>
 </body>
 </html>

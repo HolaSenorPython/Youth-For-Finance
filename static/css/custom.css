@@ -99,3 +99,15 @@
     background-color: lightcoral;
     color: white;
 }
+
+.btn-maroon {
+    background-color: maroon;
+    color: white;
+    border: none;
+}
+
+.btn-maroon:hover,
+.btn-maroon:focus {
+    background-color: lightcoral;
+    color: white;
+}

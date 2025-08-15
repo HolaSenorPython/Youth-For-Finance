@@ -36,6 +36,11 @@ class DeleteTaskForm(FlaskForm):
     desired_task_id = IntegerField("What is the ID of the task you would like to remove?", validators=[DataRequired()])
     delete_task_btn = SubmitField("Delete Task!🗑️", render_kw={'class': 'btn btn-danger'}) # Specify keywords for render, specifically render button with those classes on it
 
+# Form for DELETING A USER
+class DeleteUserForm(FlaskForm):
+    desired_user_id = IntegerField("What is the ID of the USER you would like to delete?", validators=[DataRequired()])
+    delete_user_btn = SubmitField("Delete User!🚮", render_kw={'class': 'btn btn-danger'})
+    
 # Admin form for NUKING the database
 class NukeForm(FlaskForm):
     nuke_db = BooleanField("Check the box if you are SURE you want to reset all databases.")
